@@ -1,28 +1,30 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: push-dev2
 
 on:
+  # 保留原有 push 触发，新增手动触发支持
   push:
     branches: [ dev2.0 ]
+  workflow_dispatch:  # ✅ 新增手动触发入口
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: dev2.0  # ✅ 强制固定到 dev2.0 分支
+
       - name: Set up JDK 16
         uses: actions/setup-java@v3
         with:
           java-version: '16'
           distribution: 'adopt'
-      - name: Build with Gradle
+
+      - name: Build with Gradle  # 📝 修正名称（原步骤实际使用 Gradle）
         run: ./gradlew clean build
 
-      - name: Upload a Build Artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         if: success()
         with:
